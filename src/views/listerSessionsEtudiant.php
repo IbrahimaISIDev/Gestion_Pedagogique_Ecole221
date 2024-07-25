@@ -21,7 +21,7 @@
         }
 
         .day {
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #e2e8f0;
             text-align: center;
             position: relative;
@@ -30,14 +30,14 @@
         }
 
         .day:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
         }
 
         .event {
-            padding: 4px;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 14px;
             margin-top: 4px;
             transition: all 0.3s ease;
         }
@@ -71,7 +71,7 @@
             padding: 30px;
             border: 1px solid #888;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
@@ -144,7 +144,7 @@
                 }
 
                 for ($day = 1; $day <= $daysInMonth; $day++) {
-                    echo "<div class='day'><span class='font-semibold'>$day</span>";
+                    echo "<div class='day'><span class='font-semibold text-gray-800'>$day</span>";
                     if (isset($eventsByDay[$day])) {
                         foreach ($eventsByDay[$day] as $session) {
                             $className = 'event event-planned'; // Use a single class for all events
@@ -163,7 +163,37 @@
             </a>
         </div>
     </div>
+
+    <!-- Modal (for future use) -->
+    <div id="justificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-xl font-semibold mb-4 text-blue-700">Justifier l'absence</h2>
+            <form id="justificationForm" action="/professeurs/cours/sessions" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="absence_id" id="modalAbsenceId">
+                <textarea name="motif" placeholder="Motif de l'absence" class="border rounded-lg p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                <input type="file" name="fichier" class="border rounded-lg p-2 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex justify-end mt-4 space-x-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all">Annuler</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">Soumettre</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <script>
+        // Script to handle modal display
+        function openModal(absenceId) {
+            document.getElementById('modalAbsenceId').value = absenceId;
+            document.getElementById('justificationModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('justificationModal').classList.remove('show');
+        }
+
+        document.querySelectorAll('.close').forEach(el => el.addEventListener('click', closeModal));
+    </script>
 </body>
 
 </html>

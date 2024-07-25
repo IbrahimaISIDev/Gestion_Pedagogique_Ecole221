@@ -1,4 +1,3 @@
-
 <?php
 
 use App\models\EmploiDuTempsModel;
@@ -10,7 +9,7 @@ class EmploiDuTempsController
         $model = new EmploiDuTempsModel();
         $emploiDuTemps = $model->getCoursSemaine($etudiantId);
 
-        // Passer les données à la vue
+        // Inclure la vue en passant les données récupérées
         include 'views/emploi_du_temps.php'; // Assurez-vous que le chemin est correct
     }
 
