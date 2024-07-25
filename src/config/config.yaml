@@ -1,0 +1,5 @@
+database:
+  host: 'localhost'
+  dbname: 'gestion_pedagogique'
+  user: 'ibrahimasory'
+  password: 'Sonatel@2024'

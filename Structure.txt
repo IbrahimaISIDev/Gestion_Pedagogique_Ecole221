@@ -1,0 +1,41 @@
+/Gestion_Pedagogique_2024
+├── public
+│   └── index.php
+├── routes
+│   └── web.php
+├── src
+│   ├── config
+│   │   └── config.yaml
+│   ├── controllers
+│   │   ├── AuthController.php
+│   │   └── ProfesseurController.php
+│   ├── Core
+│   │   ├── Controller.php
+│   │   ├── Entity.php
+│   │   ├── Model.php
+│   │   ├── Router.php
+│   │   └── View.php
+│   ├── entities
+│   │   ├── Cours.php
+│   │   └── Entity.php
+│   ├── models
+│   │   ├── DemandeAnnulation.php
+│   │   ├── Model.php
+│   │   └── Professeur.php
+│   ├── services
+│   │   ├── Container.php
+│   │   └── Database.php
+│   └── views
+│       ├── confirmationAnnulation.php
+│       ├── listerCours.php
+│       ├── listerSessions.php
+│       └── login.php
+├── vendor
+│   ├── autoload.php
+│   ├── composer
+│   │   └── ...
+├── .env
+├── .gitignore
+├── composer.json
+├── composer.lock
+└── structure.txt
