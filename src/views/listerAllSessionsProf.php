@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -91,8 +93,8 @@
             <h1 class="text-4xl font-extrabold mb-8 text-center text-blue-600">Liste des Sessions de Cours</h1>
 
             <!-- Formulaire de recherche et filtrage -->
-            <form action=" " method="GET" class="mb-8 bg-white p-6 rounded-lg shadow-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <form action="" method="GET" class="mb-6 bg-white p-6 rounded-lg shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
                     <div>
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
                         <div class="relative">
@@ -118,12 +120,24 @@
                         </select>
                     </div>
                     <div class="flex items-end">
-                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-md transition duration-300 ease-in-out shadow-md">
-                            Filtrer
-                        </button>
+                        <div class="flex space-x-2 w-full">
+                            <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                                </svg>
+                                Filtrer
+                            </button>
+                            <button type="submit" name="reset" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                                </svg>
+                                Réinitialiser
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
+
 
 
             <!-- Tableau des sessions -->
@@ -134,11 +148,11 @@
                         <thead class="bg-blue-50">
                             <tr>
                                 <!-- <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">ID</th> -->
-                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Libellé du Cours</th>
-                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Date</th>
-                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Heure Début</th>
-                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Heure Fin</th>
-                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Statut</th>
+                                <th class="py-4 px-6 text-left text-lg font-semibold text-blue-600 uppercase tracking-wider">Libellé du Cours</th>
+                                <th class="py-4 px-6 text-left text-lg font-semibold text-blue-600 uppercase tracking-wider">Date</th>
+                                <th class="py-4 px-6 text-left text-lg font-semibold text-blue-600 uppercase tracking-wider">Heure Début</th>
+                                <th class="py-4 px-6 text-left text-lg font-semibold text-blue-600 uppercase tracking-wider">Heure Fin</th>
+                                <th class="py-4 px-6 text-left text-lg font-semibold text-blue-600 uppercase tracking-wider">Statut</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-blue-100">
@@ -146,11 +160,11 @@
                                 <?php foreach ($sessions as $session) : ?>
                                     <tr class="hover:bg-blue-50 transition-all">
                                         <!-- <td class="py-4 px-6 text-sm font-medium text-gray-900"><?= htmlspecialchars($session['id']) ?></td> -->
-                                        <td class="py-4 px-6 text-lg text-gray-700"><?= htmlspecialchars($session['libelle_cours']) ?></td>
-                                        <td class="py-4 px-6 text-lg text-gray-700"><?= htmlspecialchars($session['date']) ?></td>
-                                        <td class="py-4 px-6 text-lg text-gray-700"><?= htmlspecialchars($session['heure_debut']) ?></td>
-                                        <td class="py-4 px-6 text-lg text-gray-700"><?= htmlspecialchars($session['heure_fin']) ?></td>
-                                        <td class="py-4 px-6 text-lg text-gray-700"><?= htmlspecialchars($session['statut']) ?></td>
+                                        <td class="py-4 px-6 text-sm font-medium text-gray-700"><i class="fas fa-book mr-2"></i><?= htmlspecialchars($session['libelle_cours']) ?></td>
+                                        <td class="py-4 px-6 text-sm font-medium text-gray-700"><?= htmlspecialchars($session['date']) ?></td>
+                                        <td class="py-4 px-6 text-sm font-medium text-gray-700"><?= htmlspecialchars($session['heure_debut']) ?></td>
+                                        <td class="py-4 px-6 text-sm font-medium text-gray-700"><?= htmlspecialchars($session['heure_fin']) ?></td>
+                                        <td class="py-4 px-6 text-sm font-medium text-gray-700"><?= htmlspecialchars($session['statut']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -184,6 +198,20 @@
             </div>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resetButton = document.getElementById('resetButton');
+            const filterForm = document.getElementById('filterForm');
+
+            resetButton.addEventListener('click', function() {
+                // Réinitialiser les champs du formulaire
+                filterForm.reset();
+
+                // Optionnel : Si vous voulez aussi effacer les paramètres de l'URL
+                window.location.href = window.location.pathname;
+            });
+        });
+    </script>
 </body>
 
 </html>

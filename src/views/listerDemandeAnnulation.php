@@ -14,20 +14,25 @@
             background-color: #f0f7ff;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23d4e3f3' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M11 0l5 20H6l5-20zm42 31a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 72h40v4H0v-4zm0-8h31v4H0v-4zm20-16h20v4H20v-4zM0 56h40v4H0v-4zm63-25a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM53 41a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-28-8a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zM56 5a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zm-3 46a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM21 0l5 20H16l5-20zm43 64v-4h-4v4h-4v4h4v4h4v-4h4v-4h-4zM36 13h4v4h-4v-4zm4 4h4v4h-4v-4zm-4 4h4v4h-4v-4zm8-8h4v4h-4v-4z'/%3E%3C/g%3E%3C/svg%3E");
         }
+
         .transition-all {
             transition: all 0.3s ease;
         }
+
         .hover-scale:hover {
             transform: scale(1.03);
         }
+
         .sidebar-link {
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
         }
+
         .sidebar-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             border-left: 4px solid #fff;
         }
+
         .custom-shadow {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
@@ -84,38 +89,73 @@
             </div>
 
             <h1 class="text-4xl font-extrabold mb-8 text-center text-blue-600">Demandes d'Annulation</h1>
+
+            <form method="GET" action="">
+                <div class="mb-4 flex items-center">
+                    <label for="filter" class="mr-2 text-gray-700">Filtrer :</label>
+                    <input type="text" id="filter" name="filter" value="<?= htmlspecialchars($filter) ?>" class="border rounded py-2 px-3">
+                    <button type="submit" class="ml-2 bg-blue-500 text-white rounded py-2 px-4">Filtrer</button>
+                </div>
+            </form>
+
             <div class="bg-white custom-shadow rounded-3xl overflow-hidden hover-scale transition-all">
                 <!-- Liste des demandes d'annulation -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-blue-200">
                         <thead class="bg-blue-50">
                             <tr>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">ID</th>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">Libellé du Cours</th>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">Date</th>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">Heure</th>
+                                <!-- <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">ID</th> -->
+                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Libellé du Cours</th>
+                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Date</th>
+                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Motif</th>
+                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Statut</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-blue-100">
                             <?php if (!empty($demandesAnnulation)) : ?>
                                 <?php foreach ($demandesAnnulation as $annulation) : ?>
                                     <tr>
-                                        <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($annulation['id']) ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($annulation['libelle_cours']) ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($annulation['date']) ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($annulation['heure']) ?></td>
+                                        <!-- <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($annulation['id']) ?></td> -->
+                                        <td class="py-4 px-6 text-lg font-medium text-gray-700"><i class="fas fa-book mr-2"></i><?= htmlspecialchars($annulation['libelle_cours']) ?></td>
+                                        <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['date_demande']) ?></td>
+                                        <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['motif']) ?></td>
+                                        <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['statut']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="4" class="py-4 px-6 text-center text-gray-500">Aucune demande d'annulation trouvée.</td>
+                                    <td colspan="3" class="py-4 px-6 text-center text-gray-500">Aucune demande d'annulation trouvée.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
+                <!-- Pagination -->
+                <div class="py-6 flex justify-center bg-blue-50">
+                    <nav class="flex space-x-2">
+                        <?php if ($page > 1) : ?>
+                            <a href="?page=1&search=<?= htmlspecialchars($filter) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">1</a>
+                            <a href="?page=<?= $page - 1 ?>&search=<?= htmlspecialchars($filter) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">Précédent</a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                            <a href="?page=<?= $i ?>&search=<?= htmlspecialchars($filter) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all <?= $i === $page ? 'bg-blue-800' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $totalPages) : ?>
+                            <a href="?page=<?= $page + 1 ?>&search=<?= htmlspecialchars($filter) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">Suivant</a>
+                            <a href="?page=<?= $totalPages ?>&search=<?= htmlspecialchars($filter) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"><?= $totalPages ?></a>
+                        <?php endif; ?>
+                    </nav>
+                </div>
+
             </div>
-        </main>
+
+
+    </div>
+    </main>
     </div>
 </body>
 

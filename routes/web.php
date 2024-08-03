@@ -23,6 +23,8 @@ $router->post('/professeurs/cours/sessions/annuler', ['Controller' => 'Professeu
 // Nouvelle route pour lister toutes les sessions d'un professeur
 $router->get('/professeurs/cours/sessions', ['Controller' => 'ProfesseurController', 'action' => 'listerToutesSessions']);
 
+$router->get('/professeurs/annulations', ['Controller' => 'ProfesseurController', 'action' => 'listerDemandesAnnulation']);
+
 // Routes pour les étudiants
 $router->get('/etudiants/cours', ['Controller' => 'EtudiantController', 'action' => 'listerCours']);
 $router->get('/etudiants/cours/sessions/{coursId}', ['Controller' => 'EtudiantController', 'action' => 'listerSessions']);

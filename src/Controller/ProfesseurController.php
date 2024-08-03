@@ -98,6 +98,13 @@ class ProfesseurController extends Controller
             exit;
         }
 
+        // Vérifier si le bouton de réinitialisation a été cliqué
+        if (isset($_GET['reset'])) {
+            // Rediriger vers la même page sans paramètres pour réinitialiser les filtres
+            header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+            exit;
+        }
+
         $professeur_id = $_SESSION['professeur_id'];
 
         // Pagination
@@ -179,11 +186,12 @@ class ProfesseurController extends Controller
 
     public function demandeAnnulation()
     {
-        if (isset($_POST['session_id'])) {
+        if (isset($_POST['session_id']) && isset($_POST['motif'])) { // Assurez-vous que 'motif' est défini dans POST
             $session_id = $_POST['session_id'];
+            $motif = $_POST['motif']; // Récupérer le motif depuis POST
             if (isset($_SESSION['professeur_id'])) {
                 $professeur_id = $_SESSION['professeur_id'];
-                $demande = new DemandeAnnulation($session_id, $professeur_id);
+                $demande = new DemandeAnnulation($session_id, $professeur_id, $motif); // Passer $motif au constructeur
                 if ($demande->save()) {
                     $this->renderView('confirmationAnnulation', ['message' => 'Votre demande d\'annulation a été envoyée.']);
                 } else {
@@ -194,6 +202,45 @@ class ProfesseurController extends Controller
                 exit;
             }
         }
+    }
+
+    public function listerDemandesAnnulation()
+    {
+        $db = Database::getInstance()->getConnection();
+
+        if (!isset($_SESSION['professeur_id'])) {
+            header('Location: /login');
+            exit;
+        }
+
+        $professeur_id = $_SESSION['professeur_id'];
+
+        // Récupérer les informations du professeur
+        $stmtProf = $db->prepare("SELECT * FROM Professeurs WHERE id = ?");
+        $stmtProf->execute([$professeur_id]);
+        $professeur = $stmtProf->fetch();
+
+        // Récupérer les paramètres de filtrage et de pagination
+        $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 3; // Nombre d'éléments par page
+        $offset = ($page - 1) * $limit;
+
+        // Récupérer les demandes d'annulation avec filtrage et pagination
+        $demandesAnnulation = DemandeAnnulation::getDemandesByProfesseur($professeur_id, $filter, $limit, $offset);
+
+        // Récupérer le nombre total de demandes pour la pagination
+        $totalDemandes = DemandeAnnulation::countDemandesByProfesseur($professeur_id, $filter);
+        $totalPages = ceil($totalDemandes / $limit);
+
+        // Passer les variables à la vue
+        $this->renderView('listerDemandeAnnulation', [
+            'professeur' => $professeur,
+            'demandesAnnulation' => $demandesAnnulation,
+            'filter' => $filter,
+            'page' => $page,
+            'totalPages' => $totalPages
+        ]);
     }
 
     private function getTotalCours($search)

@@ -8,26 +8,32 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f0f7ff;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23d4e3f3' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M11 0l5 20H6l5-20zm42 31a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 72h40v4H0v-4zm0-8h31v4H0v-4zm20-16h20v4H20v-4zM0 56h40v4H0v-4zm63-25a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM53 41a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-28-8a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zM56 5a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zm-3 46a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM21 0l5 20H16l5-20zm43 64v-4h-4v4h-4v4h4v4h4v-4h4v-4h-4zM36 13h4v4h-4v-4zm4 4h4v4h-4v-4zm-4 4h4v4h-4v-4zm8-8h4v4h-4v-4z'/%3E%3C/g%3E%3C/svg%3E");
         }
+
         .transition-all {
             transition: all 0.3s ease;
         }
+
         .hover-scale:hover {
             transform: scale(1.03);
         }
+
         .sidebar-link {
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
         }
+
         .sidebar-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             border-left: 4px solid #fff;
         }
+
         .custom-shadow {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
@@ -100,7 +106,6 @@
                     <table class="min-w-full divide-y divide-blue-200">
                         <thead class="bg-blue-50">
                             <tr>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">ID</th>
                                 <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">Libellé</th>
                                 <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">Action</th>
                             </tr>
@@ -109,9 +114,10 @@
                             <?php if (!empty($cours)) : ?>
                                 <?php foreach ($cours as $course) : ?>
                                     <tr class="hover:bg-blue-50 transition-all">
-                                        <td class="py-4 px-6 text-sm font-medium text-gray-900"><?= htmlspecialchars($course['id']) ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($course['libelle']) ?></td>
-                                        <td class="py-4 px-6 text-sm">
+                                        <td class="py-2 px-4 text-lg font-medium text-gray-700">
+                                            <i class="fas fa-book mr-2"></i> <?= htmlspecialchars($course['libelle']) ?>
+                                        </td>
+                                        <td class="py-2 px-4 text-lg font-medium">
                                             <a href="/professeurs/cours/sessions/<?= htmlspecialchars($course['id']) ?>" class="text-blue-600 hover:text-blue-800 font-medium transition-all">
                                                 <i class="fas fa-eye mr-2"></i> Voir Sessions
                                             </a>
@@ -120,12 +126,13 @@
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="3" class="py-4 px-6 text-center text-gray-500">Aucun cours disponible.</td>
+                                    <td colspan="2" class="py-4 px-6 text-center text-gray-500">Aucun cours disponible.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
+
                 <!-- Pagination -->
                 <div class="py-6 flex justify-center bg-blue-50">
                     <nav class="flex space-x-2">
