@@ -89,7 +89,7 @@
                 <h2 class="text-3xl font-semibold mb-6 text-blue-600">Informations de l'étudiant</h2>
                 <div class="flex items-center p-6 border border-blue-200 rounded-2xl shadow-lg bg-gradient-to-r from-blue-50 to-gray-50">
                     <div class="bg-blue-200 rounded-full p-4">
-                        <i class="fas fa-male text-blue-600 text-4xl"></i>
+                    <i class="fas fa-user-graduate text-blue-600 text-4xl"></i>
                     </div>
                     <div class="flex justify-between w-full ml-6">
                         <div>

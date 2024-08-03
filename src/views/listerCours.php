@@ -79,6 +79,7 @@
                         <p class="text-xl font-medium text-gray-800"><span class="text-blue-600">Nom:</span> <?= htmlspecialchars($professeur['nom']) ?></p>
                         <p class="text-xl font-medium text-gray-800"><span class="text-blue-600">Prénom:</span> <?= htmlspecialchars($professeur['prenom']) ?></p>
                         <p class="text-xl font-medium text-gray-800"><span class="text-blue-600">Email:</span> <?= htmlspecialchars($professeur['email']) ?></p>
+                        <p class="text-xl font-medium text-gray-800"><span class="text-blue-600">Grade:</span> <?= htmlspecialchars($professeur['grade']) ?></p>
                     </div>
                 </div>
             </div>

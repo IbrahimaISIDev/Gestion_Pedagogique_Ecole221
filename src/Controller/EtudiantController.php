@@ -137,29 +137,28 @@ class EtudiantController extends Controller
 
     public function marquerPresence($coursId)
     {
-        // Vérifiez si l'utilisateur est connecté
         if (!isset($_SESSION['etudiant_id'])) {
             header('Location: /login');
             exit();
         }
 
-        // Logique pour marquer la présence
-        $etudiantId = $_SESSION['etudiant_id'];
-        $this->etudiantModel->markAttendance($etudiantId, $coursId); // Assurez-vous que cette méthode est implémentée correctement
+        // Assurez-vous que $coursId est valide
+        $coursId = $_POST['coursId'] ?? $coursId; // Utilisez la valeur du paramètre ou de la requête POST
 
-        // Récupérez les sessions associées au cours
-        $sessions = $this->sessionModel->getSessionsByCoursId($coursId); // Assurez-vous que cette méthode est implémentée correctement
+        if ($coursId) {
+            $etudiantId = $_SESSION['etudiant_id'];
+            $this->etudiantModel->markAttendance($etudiantId, $coursId);
 
-        // Rendre la vue
-        $this->renderView('marquerPresence', [
-            'sessions' => $sessions,
-            'coursId' => $coursId
-        ]);
-
-        // Redirigez après un délai pour voir la page rendue
-        header('Refresh: 2; url=/etudiants/cours'); // Redirection après 2 secondes pour permettre à la vue d'être affichée
+            // Réponse de succès
+            echo json_encode(['message' => 'Présence marquée avec succès !']);
+        } else {
+            // Réponse d'erreur
+            echo json_encode(['message' => 'Erreur : ID du cours manquant.']);
+        }
         exit();
     }
+
+
 
     public function emploiDuTemps()
     {
@@ -172,4 +171,5 @@ class EtudiantController extends Controller
             echo "L'ID de l'étudiant n'est pas défini dans la session.";
         }
     }
+
 }

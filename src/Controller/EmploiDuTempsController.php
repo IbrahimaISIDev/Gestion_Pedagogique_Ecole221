@@ -1,30 +1,73 @@
 <?php
 
+namespace App\controllers;
+
 use App\models\EmploiDuTempsModel;
+use App\models\EtudiantModel;
 
 class EmploiDuTempsController
 {
-    public function afficherEmploiDuTemps($etudiantId)
+    public function emploiDuTemps($etudiantId)
     {
-        $model = new EmploiDuTempsModel();
-        $emploiDuTemps = $model->getCoursSemaine($etudiantId);
+        $etudiantModel = new EtudiantModel();
+        $etudiant = $etudiantModel->getEtudiantById($etudiantId);
 
-        // Inclure la vue en passant les données récupérées
-        include 'views/emploi_du_temps.php'; // Assurez-vous que le chemin est correct
+        if ($etudiant === null) {
+            $this->renderView('views/emploi_du_temps.php', ['error' => "Étudiant non trouvé."]);
+            return;
+        }
+
+        $this->renderView('views/emploi_du_temps.php', ['etudiant' => $etudiant]);
     }
 
     public function marquerPresence()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $sessionId = $_POST['session_id'];
-            $etudiantId = $_SESSION['etudiant_id']; // Assurez-vous que l'ID de l'étudiant est stocké dans la session
+            $sessionId = $_POST['session_id'] ?? null;
+            $etudiantId = $_SESSION['etudiant_id'] ?? null;
 
-            $model = new EmploiDuTempsModel();
-            $model->marquerPresence($etudiantId, $sessionId);
+            if (!$sessionId || !$etudiantId) {
+                echo "Données invalides.";
+                return;
+            }
 
-            // Redirection après la soumission du formulaire
-            header('Location: /etudiants/emploi_du_temps');
-            exit();
+            $emploiDuTempsModel = new EmploiDuTempsModel();
+            $session = $emploiDuTempsModel->getSessionById($sessionId);
+
+            if ($session) {
+                $currentDateTime = new \DateTime();
+                $courseDate = new \DateTime($session['date']);
+                $courseStartTime = new \DateTime($session['heure_debut']);
+                $courseEndTime = new \DateTime($session['heure_fin']);
+
+                if ($currentDateTime > $courseDate) {
+                    echo "La date du cours est passée. Vous ne pouvez plus marquer votre présence.";
+                    return;
+                }
+
+                $thirtyMinutesAfterStart = (clone $courseStartTime)->modify('+30 minutes');
+                if ($currentDateTime > $thirtyMinutesAfterStart) {
+                    $emploiDuTempsModel->marquerAbsence($etudiantId, $sessionId);
+                    echo "Vous ne pouvez plus marquer votre présence. Votre absence a été automatiquement enregistrée.";
+                    return;
+                }
+
+                if ($currentDateTime < $courseStartTime) {
+                    echo "Le cours n'a pas encore commencé. Vous ne pouvez pas marquer votre présence avant le début du cours.";
+                    return;
+                }
+
+                $emploiDuTempsModel->marquerPresence($etudiantId, $sessionId);
+                echo "Votre présence a été marquée avec succès.";
+            } else {
+                echo "Session non trouvée.";
+            }
         }
+    }
+
+    private function renderView($viewPath, $data = [])
+    {
+        extract($data);
+        require $viewPath;
     }
 }

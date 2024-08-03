@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Core\Controller;
 use App\models\AbsenceModel;
-use App\models\JustificationModel;
+use App\models\EtudiantModel; // Ensure you have an EtudiantModel for fetching student data
+use App\models\JustificationModel; // Ensure you have a JustificationModel for adding justifications
 
 class AbsenceController extends Controller
 {
@@ -16,10 +17,15 @@ class AbsenceController extends Controller
         }
 
         $etudiantId = $_SESSION['etudiant_id'];
-        
+
         $absenceModel = new AbsenceModel();
         $absences = $absenceModel->getAbsencesByEtudiant($etudiantId);
-        $this->renderView('absences', ['absences' => $absences, 'etudiantId' => $etudiantId]);
+
+        // Fetch student details
+        $etudiantModel = new EtudiantModel();
+        $etudiant = $etudiantModel->getEtudiantById($etudiantId);
+
+        $this->renderView('absences', ['absences' => $absences, 'etudiant' => $etudiant]);
     }
 
     public function addJustification()
@@ -30,16 +36,18 @@ class AbsenceController extends Controller
             $pieceJointe = null;
 
             // Handle file upload
-            if (isset($_FILES['piece_jointe']) && $_FILES['piece_jointe']['error'] === UPLOAD_ERR_OK) {
-                $targetDir = "uploads/";
-                $targetFile = $targetDir . basename($_FILES["piece_jointe"]["name"]);
-                if (move_uploaded_file($_FILES["piece_jointe"]["tmp_name"], $targetFile)) {
+            if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] === UPLOAD_ERR_OK) {
+                $targetDir = "/var/www/html/Gestion-Ecole221/public/uploads/";
+                $targetFile = $targetDir . basename($_FILES["fichier"]["name"]);
+                if (move_uploaded_file($_FILES["fichier"]["tmp_name"], $targetFile)) {
                     $pieceJointe = $targetFile;
                 }
             }
 
-            JustificationModel::add($absenceId, $motif, $pieceJointe);
+            $absenceModel = new AbsenceModel();
+            $absenceModel->addJustification($absenceId, $motif, $pieceJointe);
             header('Location: /etudiants/absences');
         }
     }
 }
+

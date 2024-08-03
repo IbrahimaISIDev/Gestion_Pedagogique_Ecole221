@@ -3,6 +3,7 @@
 namespace App\models;
 
 use App\services\Database;
+use PDOException;
 use PDO;
 
 class EtudiantModel
@@ -14,12 +15,12 @@ class EtudiantModel
         $this->pdo = Database::getInstance()->getConnection();
     }
 
-    public function getEtudiantById($id)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM Etudiants WHERE id = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetch();
-    }
+    // public function getEtudiantById($id)
+    // {
+    //     $stmt = $this->pdo->prepare("SELECT * FROM Etudiants WHERE id = ?");
+    //     $stmt->execute([$id]);
+    //     return $stmt->fetch();
+    // }
 
     public function getAllEtudiants()
     {
@@ -139,10 +140,29 @@ class EtudiantModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getEtudiantByEmailAndPassword($email, $password) {
+    public function getEtudiantByEmailAndPassword($email, $password)
+    {
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare('SELECT * FROM etudiants WHERE email = ? AND password = ?');
         $stmt->execute([$email, $password]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getEtudiantById($id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM Etudiants WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Erreur : " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function getCoursById($coursId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM Cours WHERE id = ?");
+        $stmt->execute([$coursId]);
+        return $stmt->fetch();
     }
 }

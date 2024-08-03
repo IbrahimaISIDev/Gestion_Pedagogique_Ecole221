@@ -20,30 +20,26 @@ $router->get('/professeurs/cours', ['Controller' => 'ProfesseurController', 'act
 $router->get('/professeurs/cours/sessions/{coursId}', ['Controller' => 'ProfesseurController', 'action' => 'listerSessions']);
 $router->post('/professeurs/cours/sessions/annuler', ['Controller' => 'ProfesseurController', 'action' => 'demandeAnnulation']);
 
+// Nouvelle route pour lister toutes les sessions d'un professeur
+$router->get('/professeurs/cours/sessions', ['Controller' => 'ProfesseurController', 'action' => 'listerToutesSessions']);
+
 // Routes pour les étudiants
 $router->get('/etudiants/cours', ['Controller' => 'EtudiantController', 'action' => 'listerCours']);
-
 $router->get('/etudiants/cours/sessions/{coursId}', ['Controller' => 'EtudiantController', 'action' => 'listerSessions']);
 $router->post('/etudiants/marquer_presence/{coursId}', ['Controller' => 'EtudiantController', 'action' => 'marquerPresence']);
-
 $router->get('/etudiants/emploi_du_temps', ['Controller' => 'EtudiantController', 'action' => 'emploiDuTemps']);
-
 $router->get('/etudiants/absences', ['Controller' => 'AbsenceController', 'action' => 'listAbsences']);
-
-
-//$router->get('/etudiants/absences/{etudiantId}', 'AbsenceController@listAbsences');
-
+$router->post('/etudiants/absences', ['Controller' => 'AbsenceController', 'action' => 'addJustification']);
 $router->get('/etudiants/justifier_absence', ['Controller' => 'AbsenceController', 'action' => 'justifierAbsence']);
 
-
-
-$router->get('/etudiants', ['Controller' => 'EtudiantController', 'action' => 'index']); // Liste des étudiants
-$router->get('/etudiants/view/{id}', ['Controller' => 'EtudiantController', 'action' => 'view']); // Détails d'un étudiant
-$router->get('/etudiants/create', ['Controller' => 'EtudiantController', 'action' => 'create']); // Formulaire de création
-$router->post('/etudiants/create', ['Controller' => 'EtudiantController', 'action' => 'create']); // Soumettre le formulaire de création
-$router->get('/etudiants/edit/{id}', ['Controller' => 'EtudiantController', 'action' => 'edit']); // Formulaire d'édition
-$router->post('/etudiants/edit/{id}', ['Controller' => 'EtudiantController', 'action' => 'edit']); // Soumettre le formulaire d'édition
-$router->get('/etudiants/delete/{id}', ['Controller' => 'EtudiantController', 'action' => 'delete']); // Supprimer un étudiant
+// Routes CRUD pour les étudiants
+$router->get('/etudiants', ['Controller' => 'EtudiantController', 'action' => 'index']);
+$router->get('/etudiants/view/{id}', ['Controller' => 'EtudiantController', 'action' => 'view']);
+$router->get('/etudiants/create', ['Controller' => 'EtudiantController', 'action' => 'create']);
+$router->post('/etudiants/create', ['Controller' => 'EtudiantController', 'action' => 'create']);
+$router->get('/etudiants/edit/{id}', ['Controller' => 'EtudiantController', 'action' => 'edit']);
+$router->post('/etudiants/edit/{id}', ['Controller' => 'EtudiantController', 'action' => 'edit']);
+$router->get('/etudiants/delete/{id}', ['Controller' => 'EtudiantController', 'action' => 'delete']);
 
 // Exécution du routeur
 $router->run($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

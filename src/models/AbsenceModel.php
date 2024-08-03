@@ -18,7 +18,7 @@ class AbsenceModel {
 
     public function addJustification($absence_id, $motif, $fichier) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare('INSERT INTO justifications (absence_id, motif, fichier) VALUES (?, ?, ?)');
+        $stmt = $db->prepare('INSERT INTO justifications (absence_id, motif, piece_jointe) VALUES (?, ?, ?)');
         return $stmt->execute([$absence_id, $motif, $fichier]);
     }
     
