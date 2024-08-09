@@ -9,8 +9,10 @@ use App\models\DemandeAnnulation;
 
 class ProfesseurController extends Controller
 {
+    private $sessionModel;
     public function listerCours()
     {
+
         $db = Database::getInstance()->getConnection();
         if ($db === null) {
             die('Erreur : Impossible d\'établir une connexion à la base de données.');
@@ -87,8 +89,21 @@ class ProfesseurController extends Controller
             'sessionModel' => $sessionModel,
             'coursId' => $coursId  // Ajout de la variable coursId
         ]);
+        foreach ($sessions as &$session) {
+            $session['className'] = ($session['statut'] === 'annulée') ? 'event-cancelled' : 'event-planned';
+        }
     }
 
+
+    public function annulerSession()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $sessionId = $_POST['session_id'];
+            $motif = $_POST['motif'];
+            $this->sessionModel->cancelSession($sessionId, $motif);
+        }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
     public function listerToutesSessions()
     {
         $db = Database::getInstance()->getConnection();
@@ -240,6 +255,29 @@ class ProfesseurController extends Controller
             'filter' => $filter,
             'page' => $page,
             'totalPages' => $totalPages
+        ]);
+    }
+
+    public function afficherCalendrierHebdomadaire()
+    {
+        if (!isset($_SESSION['professeur_id'])) {
+            header('Location: /login');
+            exit;
+        }
+
+        $professeur_id = $_SESSION['professeur_id'];
+        $sessionModel = new SessionModel();
+
+        $currentDate = new \DateTime();
+        $startDate = $currentDate->modify('Monday this week')->format('Y-m-d');
+        $endDate = $currentDate->modify('Sunday this week')->format('Y-m-d');
+
+        $sessions = $sessionModel->getSessionsForWeek($professeur_id, $startDate, $endDate);
+
+        $this->renderView('calendrierHebdomadaire', [
+            'sessions' => $sessions,
+            'startDate' => $startDate,
+            'endDate' => $endDate
         ]);
     }
 

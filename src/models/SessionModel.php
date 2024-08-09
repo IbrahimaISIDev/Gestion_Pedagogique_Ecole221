@@ -32,17 +32,31 @@ class SessionModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function cancelSession($sessionId)
+    public function cancelSession($sessionId, $motif)
     {
         $stmt = $this->pdo->prepare("UPDATE Sessions SET statut = 'annulée' WHERE id = ?");
-        return $stmt->execute([$sessionId]);
+        $stmt->execute([$sessionId]);
+
+        $stmt = $this->pdo->prepare('INSERT INTO Demande_Annulation (session_id, professeur_id, date_demande, motif, statut) VALUES (?, ?, NOW(), ?, "en_attente")');
+        $stmt->execute([$sessionId, $_SESSION['professeur_id'], $motif]);
     }
 
-    public function annulerSession($sessionId, $motif)
+    public function getSessionsForWeek($professeurId, $startDate, $endDate)
     {
-        $stmt = $this->pdo->prepare('UPDATE Sessions SET statut = "annulée", demande_annulation = TRUE WHERE id = ?');
-        $stmt->execute([$sessionId]);
+        $stmt = $this->pdo->prepare("
+        SELECT s.*, c.libelle AS cours_libelle 
+        FROM Sessions s 
+        JOIN Cours c ON s.cours_id = c.id
+        JOIN Professeurs_Cours pc ON c.id = pc.cours_id
+        WHERE pc.professeur_id = :professeur_id
+        AND s.date BETWEEN :start_date AND :end_date
+        ORDER BY s.date, s.heure_debut
+    ");
+        $stmt->execute([
+            ':professeur_id' => $professeurId,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
 }
-?>

@@ -59,6 +59,17 @@
             color: white;
         }
 
+        .cancel-button {
+            background-color: #ff5252;
+            color: white;
+            cursor: pointer;
+        }
+
+        .cancel-button:disabled {
+            background-color: #e57373;
+            cursor: not-allowed;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -215,7 +226,8 @@
                                 echo "<span class='block font-medium'>" . htmlspecialchars($session['heure_debut']) . " - " . htmlspecialchars($session['heure_fin']) . "</span>";
                                 echo "<span class='block'>" . htmlspecialchars($session['statut']) . "</span>";
                                 if ($session['statut'] === 'planifiée') {
-                                    echo "<button type='button' class='mt-1 bg-red-500 text-white px-2 py-1 rounded-full text-xs hover:bg-red-600 transition duration-300 ease-in-out' onclick='openModal(" . htmlspecialchars(json_encode(array_merge($session, ['cours_libelle' => $cours['libelle']]))) . ")'>Annuler</button>";                                }
+                                    echo "<button type='button' class='mt-1 bg-red-500 text-white px-2 py-1 rounded-full text-xs hover:bg-red-600 transition duration-300 ease-in-out' onclick='openModal(" . htmlspecialchars(json_encode(array_merge($session, ['cours_libelle' => $cours['libelle']]))) . ")'>Annuler</button>";
+                                }
                                 echo "</div>";
                             }
                         }
@@ -229,19 +241,20 @@
             </div>
         </div>
 
+        <!-- Modal -->
         <div id="modal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div class="bg-white rounded-lg shadow-2xl max-w-lg w-full p-6 relative">
+            <div class="bg-white rounded-lg shadow-2xl max-w-lg w-full p-8 relative">
                 <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition duration-300 ease-in-out" onclick="closeModal()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Demande d'annulation de la session</h2>
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">Demande d'annulation</h2>
                 <p class="mb-4 text-gray-600">Voulez-vous vraiment annuler la session du cours de <span id="cours_libelle" class="font-semibold text-gray-800"></span> devant se tenir le <span id="session_date" class="font-semibold text-gray-800"></span> de <span id="session_heure_debut" class="font-semibold text-gray-800"></span> à <span id="session_heure_fin" class="font-semibold text-gray-800"></span> ?</p>
-                <p class="mb-4 text-gray-600">Si oui, quel est le motif de l'annulation ?</p>
+                <p class="mb-4 text-lg-gray-600">Si oui, quel est le motif de l'annulation ?</p>
                 <form id="cancel-form" method="post" action="/professeurs/cours/sessions/annuler">
                     <input type="hidden" id="session_id" name="session_id" value="">
-                    <textarea id="motif" name="motif" rows="4" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out mb-4" placeholder="Motif de l'annulation"></textarea>
+                    <textarea id="motif" name="motif" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out mb-4" placeholder="Motif de l'annulation"></textarea>
                     <div class="flex justify-end mt-4">
                         <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-300 ease-in-out" onclick="closeModal()">Non</button>
                         <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out">Oui, Annuler</button>

@@ -278,43 +278,42 @@
                 fetch(`/etudiants/marquer_presence/${sessionId}`, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
                         },
-                        body: `coursId=${encodeURIComponent(sessionId)}`
+                        body: JSON.stringify({
+                            coursId: sessionId
+                        })
                     })
-                    .then(response => response.json())
-                    .then(message => {
-                        const notification = document.getElementById('confirmationNotification');
-                        document.getElementById('notificationMessage').textContent = message.message;
-                        notification.classList.remove('opacity-0', 'scale-95');
-                        notification.classList.add('opacity-100', 'scale-100');
-
-                        setTimeout(() => {
-                            notification.classList.add('opacity-0', 'scale-95');
-                            notification.classList.remove('opacity-100', 'scale-100');
-                        }, 4000);
-
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur réseau ou serveur');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        showNotification(data.message || 'Présence marquée avec succès !');
                         closeModal();
                     })
                     .catch(error => {
                         console.error('Error marking presence:', error);
+                        showNotification('Erreur lors du marquage de la présence. Veuillez réessayer.', true);
                     });
             }
 
-            fetch(`/etudiants/marquer_presence/${coursId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `coursId=${encodeURIComponent(coursId)}`
-                })
-                .then(response => response.json())
-                .then(message => {
-                    console.log(message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            function showNotification(message, isError = false) {
+                const notification = document.getElementById('confirmationNotification');
+                const notificationMessage = document.getElementById('notificationMessage');
+
+                notificationMessage.textContent = message;
+                notification.classList.remove('opacity-0', 'scale-95', 'bg-blue-600', 'bg-red-600');
+                notification.classList.add('opacity-100', 'scale-100', isError ? 'bg-red-600' : 'bg-blue-600');
+
+                setTimeout(() => {
+                    notification.classList.add('opacity-0', 'scale-95');
+                    notification.classList.remove('opacity-100', 'scale-100');
+                }, 4000);
+            }
         </script>
 </body>
 

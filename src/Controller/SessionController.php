@@ -30,7 +30,7 @@ class SessionController
         }
 
         foreach ($sessions as &$session) {
-            $session['className'] = ($session['demande_annulation']) ? 'event-cancelled' : 'event-planned';
+            $session['className'] = ($session['statut'] === 'annulée') ? 'event-cancelled' : 'event-planned';
         }
 
         require 'src/views/listerSessions.php';
@@ -41,8 +41,10 @@ class SessionController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sessionId = $_POST['session_id'];
             $motif = $_POST['motif'];
-            $this->sessionModel->annulerSession($sessionId, $motif);
+            $this->sessionModel->cancelSession($sessionId, $motif);
+            // Vous pouvez aussi ajouter un enregistrement de demande d'annulation si nécessaire
         }
         header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
+    
 }

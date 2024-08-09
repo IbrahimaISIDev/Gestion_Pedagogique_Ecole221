@@ -25,6 +25,11 @@ $router->get('/professeurs/cours/sessions', ['Controller' => 'ProfesseurControll
 
 $router->get('/professeurs/annulations', ['Controller' => 'ProfesseurController', 'action' => 'listerDemandesAnnulation']);
 
+$router->get('/professeurs/{id}/weekly-calendar', ['Controller' => 'ProfesseurController', 'action' => 'showWeeklyCalendar']);
+$router->get('/professeurs/calendrier-hebdomadaire', ['Controller' => 'ProfesseurController', 'action' => 'afficherCalendrierHebdomadaire']);
+// $router->get('/professeur/calendrier-hebdomadaire', 'ProfesseurController@afficherCalendrierHebdomadaire');
+
+
 // Routes pour les étudiants
 $router->get('/etudiants/cours', ['Controller' => 'EtudiantController', 'action' => 'listerCours']);
 $router->get('/etudiants/cours/sessions/{coursId}', ['Controller' => 'EtudiantController', 'action' => 'listerSessions']);

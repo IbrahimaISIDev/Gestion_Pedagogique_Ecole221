@@ -49,12 +49,17 @@
                     <ul class="space-y-4">
                         <li>
                             <a href="/professeurs/cours" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
-                                <i class="fas fa-book mr-3"></i> Liste des Cours
+                                <i class="fas fa-book mr-3"></i> Mes Cours
                             </a>
                         </li>
                         <li>
                             <a href="/professeurs/cours/sessions" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
-                                <i class="fas fa-calendar-day mr-3"></i> Sessions
+                            <i class="fas fa-chalkboard-teacher mr-3"></i> Sessions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/professeurs/calendrier-hebdomadaire" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
+                                <i class="fas fa-calendar-day mr-3"></i> Calendrier
                             </a>
                         </li>
                         <li>
@@ -90,11 +95,23 @@
 
             <h1 class="text-4xl font-extrabold mb-8 text-center text-blue-600">Demandes d'Annulation</h1>
 
-            <form method="GET" action="">
-                <div class="mb-4 flex items-center">
-                    <label for="filter" class="mr-2 text-gray-700">Filtrer :</label>
-                    <input type="text" id="filter" name="filter" value="<?= htmlspecialchars($filter) ?>" class="border rounded py-2 px-3">
-                    <button type="submit" class="ml-2 bg-blue-500 text-white rounded py-2 px-4">Filtrer</button>
+            <form method="GET" action="" class="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl shadow-lg">
+                <div class="flex flex-wrap items-center space-x-4">
+                    <label for="filter" class="text-sm font-semibold text-gray-700">Filtrer :</label>
+                    <div class="flex-grow relative">
+                        <input type="text" id="filter" name="filter" value="<?= htmlspecialchars($filter) ?>" class="w-full p-3 pl-10 border-2 border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-300 ease-in-out shadow-sm" placeholder="Entrez votre filtre...">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.293 12.293a1 1 0 011.414 1.414l-3.397 3.397a8 8 0 111.415-1.415l3.397-3.397zM8 14a6 6 0 100-12 6 6 0 000 12z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <button type="submit" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out shadow-md transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                        </svg>
+                        Filtrer
+                    </button>
                 </div>
             </form>
 

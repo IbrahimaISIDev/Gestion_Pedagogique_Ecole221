@@ -50,12 +50,17 @@
                     <ul class="space-y-4">
                         <li>
                             <a href="/professeurs/cours" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
-                                <i class="fas fa-book mr-3"></i> Liste des Cours
+                                <i class="fas fa-book mr-3"></i> Mes Cours
                             </a>
                         </li>
                         <li>
                             <a href="/professeurs/cours/sessions" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
-                                <i class="fas fa-calendar-day mr-3"></i> Sessions
+                            <i class="fas fa-chalkboard-teacher mr-3"></i> Sessions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/professeurs/calendrier-hebdomadaire" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
+                                <i class="fas fa-calendar-day mr-3"></i> Calendrier
                             </a>
                         </li>
                         <li>
@@ -95,8 +100,8 @@
                 <!-- Formulaire de filtrage -->
                 <div class="p-6 border-b border-blue-200 bg-gradient-to-r from-blue-50 to-gray-50">
                     <form action="/professeurs/cours" method="get" class="flex items-center space-x-4">
-                        <input type="text" name="search" placeholder="Rechercher par libellé" value="<?= htmlspecialchars($search ?? '') ?>" class="p-4 border border-blue-300 rounded-xl w-full focus:ring-2 focus:ring-blue-500 transition-all" />
-                        <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                        <input type="text" name="search" placeholder="Rechercher par libellé" value="<?= htmlspecialchars($search ?? '') ?>" class="p-4 border border-blue-300 rounded-xl w-full focus:ring-2 focus:ring-blue-500 transition-all shadow-md" />
+                        <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all flex items-center">
                             <i class="fas fa-search mr-2"></i> Rechercher
                         </button>
                     </form>

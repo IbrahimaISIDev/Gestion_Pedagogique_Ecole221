@@ -123,73 +123,112 @@
 </head>
 
 <body class="bg-gray-100 text-gray-900">
-    <div class="container mx-auto p-6">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-600">Sessions du Cours : <span class="text-gray-800"><?= htmlspecialchars($cours['libelle'] ?? 'Cours inconnu') ?></span></h1>
-            <a href="/logout" class="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300 ease-in-out flex items-center">
-                <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
-            </a>
-        </div>
-
-        <div class="bg-white shadow-lg rounded-2xl p-8 mb-8">
-            <form action="/professeurs/cours/sessions/<?= htmlspecialchars($coursId) ?>" method="get" class="flex space-x-4 items-center">
-                <input type="date" name="date_filter" value="<?= htmlspecialchars($dateFilter ?? '') ?>" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out" />
-                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out flex items-center">
-                    <i class="fas fa-filter mr-2"></i> Filtrer
-                </button>
-            </form>
-        </div>
-
-        <div class="bg-white shadow-lg rounded-2xl p-8 mb-8">
-            <?php
-            $currentMonth = date('F');
-            $currentYear = date('Y');
-            ?>
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-semibold text-blue-600"><?= $currentMonth ?> <?= $currentYear ?></h2>
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-b from-blue-600 to-gray-500 text-white shadow-2xl h-screen">
+            <div class="p-6">
+                <h2 class="text-3xl font-bold mb-8 text-center">Menu</h2>
+                <nav>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="/etudiants/emploi_du_temps" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                                <i class="fas fa-calendar-alt mr-3"></i> Emploi du Temps
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/etudiants/cours" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                                <i class="fas fa-book mr-3"></i> Liste des Cours
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/etudiants/absences" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                                <i class="fas fa-calendar-times mr-3"></i> Liste des Absences
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/etudiants/calendrier" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">
+                                <i class="fas fa-calendar-alt mr-3"></i> Calendrier des Sessions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout" class="sidebar-link flex items-center py-3 px-4 text-red-300 hover:bg-red-600 hover:text-white rounded-lg mt-8">
+                                <i class="fas fa-sign-out-alt mr-3"></i> Déconnexion
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <div class="calendar">
+        </aside>
+
+        <!-- Main Content -->
+        <div class="w-full container mx-auto p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-blue-600">Sessions du Cours : <span class="text-gray-800"><?= htmlspecialchars($cours['libelle'] ?? 'Cours inconnu') ?></span></h1>
+                <a href="/logout" class="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300 ease-in-out flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                </a>
+            </div>
+
+            <div class="bg-white shadow-lg rounded-2xl p-8 mb-8">
+                <form action="/professeurs/cours/sessions/<?= htmlspecialchars($coursId) ?>" method="get" class="flex space-x-4 items-center">
+                    <input type="date" name="date_filter" value="<?= htmlspecialchars($dateFilter ?? '') ?>" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out" />
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out flex items-center">
+                        <i class="fas fa-filter mr-2"></i> Filtrer
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white shadow-lg rounded-2xl p-8 mb-8">
                 <?php
-                $daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-                foreach ($daysOfWeek as $day) {
-                    echo "<div class='day font-bold text-gray-600'>$day</div>";
-                }
-
-                $currentMonthNum = date('m');
-                $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonthNum, $currentYear);
-                $firstDayOfMonth = date('N', strtotime("$currentYear-$currentMonthNum-01"));
-
-                for ($i = 1; $i < $firstDayOfMonth; $i++) {
-                    echo "<div class='day bg-gray-100'></div>";
-                }
-
-                $eventsByDay = [];
-                foreach ($sessions as $session) {
-                    $eventDay = date('j', strtotime($session['date']));
-                    if (!isset($eventsByDay[$eventDay])) {
-                        $eventsByDay[$eventDay] = [];
-                    }
-                    $eventsByDay[$eventDay][] = $session;
-                }
-
-                for ($day = 1; $day <= $daysInMonth; $day++) {
-                    echo "<div class='day'><span class='font-semibold text-gray-800'>$day</span>";
-                    if (isset($eventsByDay[$day])) {
-                        foreach ($eventsByDay[$day] as $session) {
-                            $className = 'event event-planned'; // Use a single class for all events
-                            echo "<div class='$className'>";
-                            echo "<span class='block'>" . htmlspecialchars($cours['libelle'] ?? 'Cours inconnu') . "</span>";
-                            echo "<span class='block font-medium'>" . htmlspecialchars($session['heure_debut']) . " - " . htmlspecialchars($session['heure_fin']) . "</span>";
-                            echo "</div>";
-                        }
-                    }
-                    echo "</div>";
-                }
+                $currentMonth = date('F');
+                $currentYear = date('Y');
                 ?>
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-semibold text-blue-600"><?= $currentMonth ?> <?= $currentYear ?></h2>
+                </div>
+                <div class="calendar grid grid-cols-7 gap-4">
+                    <?php
+                    $daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+                    foreach ($daysOfWeek as $day) {
+                        echo "<div class='day font-bold text-gray-600'>$day</div>";
+                    }
+
+                    $currentMonthNum = date('m');
+                    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonthNum, $currentYear);
+                    $firstDayOfMonth = date('N', strtotime("$currentYear-$currentMonthNum-01"));
+
+                    for ($i = 1; $i < $firstDayOfMonth; $i++) {
+                        echo "<div class='day bg-gray-100'></div>";
+                    }
+
+                    $eventsByDay = [];
+                    foreach ($sessions as $session) {
+                        $eventDay = date('j', strtotime($session['date']));
+                        if (!isset($eventsByDay[$eventDay])) {
+                            $eventsByDay[$eventDay] = [];
+                        }
+                        $eventsByDay[$eventDay][] = $session;
+                    }
+
+                    for ($day = 1; $day <= $daysInMonth; $day++) {
+                        echo "<div class='day'><span class='font-semibold text-gray-800'>$day</span>";
+                        if (isset($eventsByDay[$day])) {
+                            foreach ($eventsByDay[$day] as $session) {
+                                $className = 'event event-planned'; // Use a single class for all events
+                                echo "<div class='$className'>";
+                                echo "<span class='block'>" . htmlspecialchars($cours['libelle'] ?? 'Cours inconnu') . "</span>";
+                                echo "<span class='block font-medium'>" . htmlspecialchars($session['heure_debut']) . " - " . htmlspecialchars($session['heure_fin']) . "</span>";
+                                echo "</div>";
+                            }
+                        }
+                        echo "</div>";
+                    }
+                    ?>
+                </div>
+                <a href="/professeurs/cours" class="mt-8 inline-block text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux cours
+                </a>
             </div>
-            <a href="/professeurs/cours" class="mt-8 inline-block text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
-                <i class="fas fa-arrow-left mr-2"></i> Retour aux cours
-            </a>
         </div>
     </div>
 

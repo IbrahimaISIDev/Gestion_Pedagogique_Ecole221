@@ -113,14 +113,22 @@ class EtudiantModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // public function markAttendance($etudiantId, $coursId)
+    // {
+    //     $stmt = $this->pdo->prepare('
+    //     INSERT INTO Attendance (etudiant_id, cours_id, date) 
+    //     VALUES (?, ?, NOW())
+    //     ON DUPLICATE KEY UPDATE date = NOW()
+    // ');
+    //     return $stmt->execute([$etudiantId, $coursId]);
+    // }
     public function markAttendance($etudiantId, $coursId)
     {
-        $stmt = $this->pdo->prepare('
-        INSERT INTO Attendance (etudiant_id, cours_id, date) 
-        VALUES (?, ?, NOW())
-        ON DUPLICATE KEY UPDATE date = NOW()
-    ');
-        return $stmt->execute([$etudiantId, $coursId]);
+        $sql = "INSERT INTO presences (etudiant_id, cours_id) VALUES (:etudiant_id, :cours_id)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':etudiant_id', $etudiantId, PDO::PARAM_INT);
+        $stmt->bindParam(':cours_id', $coursId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
     public function getEmploiDuTemps($etudiantId)
@@ -160,7 +168,8 @@ class EtudiantModel
         }
     }
 
-    public function getCoursById($coursId) {
+    public function getCoursById($coursId)
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM Cours WHERE id = ?");
         $stmt->execute([$coursId]);
         return $stmt->fetch();
