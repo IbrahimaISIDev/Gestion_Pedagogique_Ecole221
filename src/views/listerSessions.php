@@ -208,6 +208,8 @@
                     }
 
                     $eventsByDay = [];
+                    // Initialize $sessions as an empty array if not set
+                    $sessions = isset($sessions) ? $sessions : [];
                     foreach ($sessions as $session) {
                         $eventDay = date('j', strtotime($session['date']));
                         if (!isset($eventsByDay[$eventDay])) {

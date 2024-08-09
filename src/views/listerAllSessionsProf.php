@@ -176,8 +176,13 @@
                         </tbody>
                     </table>
                 </div>
+                
                 <!-- Pagination -->
                 <div class="py-6 flex justify-center bg-blue-50">
+                <?php
+                    // Initialize $currentPage and other variables if not set
+                    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    ?>
                     <nav class="flex space-x-2">
                         <?php if ($currentPage > 1) : ?>
                             <a href="?page=1&search=<?= htmlspecialchars($search) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">1</a>

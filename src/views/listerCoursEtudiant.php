@@ -68,11 +68,11 @@
                                 <i class="fas fa-calendar-times mr-3"></i> Liste des Absences
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="/etudiants/calendrier" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
                                 <i class="fas fa-calendar-alt mr-3"></i> Calendrier des Sessions
                             </a>
-                        </li>
+                        </li> -->
                         <li>
                             <a href="/logout" class="sidebar-link flex items-center py-3 px-4 text-red-300 hover:bg-red-600 hover:text-white rounded-lg mt-8">
                                 <i class="fas fa-sign-out-alt mr-3"></i> Déconnexion
@@ -157,6 +157,10 @@
                         </tbody>
                     </table>
                     <div class="flex justify-center items-center mt-6 space-x-4">
+                    <?php
+                    // Initialize $currentPage and other variables if not set
+                    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    ?>
                         <!-- Previous Page Button -->
                         <?php if ($currentPage > 1) : ?>
                             <a href="?page=<?= $currentPage - 1 ?>&filter=<?= htmlspecialchars($filter) ?>" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300 ease-in-out">

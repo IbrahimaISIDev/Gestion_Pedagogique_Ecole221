@@ -35,7 +35,7 @@ class ProfesseurController extends Controller
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
         // Pagination
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Default to page 1 if not set
         $perPage = 5; // Nombre de cours par page
         $offset = ($page - 1) * $perPage;
 

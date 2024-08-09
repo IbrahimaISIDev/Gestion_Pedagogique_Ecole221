@@ -55,7 +55,7 @@
                         </li>
                         <li>
                             <a href="/professeurs/cours/sessions" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
-                            <i class="fas fa-chalkboard-teacher mr-3"></i> Sessions
+                                <i class="fas fa-chalkboard-teacher mr-3"></i> Sessions
                             </a>
                         </li>
                         <li>
@@ -139,25 +139,31 @@
                 </div>
 
                 <!-- Pagination -->
+
                 <div class="py-6 flex justify-center bg-blue-50">
+                    <?php
+                    // Initialize $currentPage and other variables if not set
+                    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    ?>
                     <nav class="flex space-x-2">
                         <?php if ($currentPage > 1) : ?>
-                            <a href="?page=1&search=<?= htmlspecialchars($search) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">1</a>
-                            <a href="?page=<?= $currentPage - 1 ?>&search=<?= htmlspecialchars($search) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">Précédent</a>
+                            <a href="?page=1&search=<?= $search ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">1</a>
+                            <a href="?page=<?= $currentPage - 1 ?>&search=<?= $search ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">Précédent</a>
                         <?php endif; ?>
 
                         <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                            <a href="?page=<?= $i ?>&search=<?= htmlspecialchars($search) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all <?= $i === $currentPage ? 'bg-blue-800' : '' ?>">
+                            <a href="?page=<?= $i ?>&search=<?= $search ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all <?= $i === $currentPage ? 'bg-blue-800' : '' ?>">
                                 <?= $i ?>
                             </a>
                         <?php endfor; ?>
 
                         <?php if ($currentPage < $totalPages) : ?>
-                            <a href="?page=<?= $currentPage + 1 ?>&search=<?= htmlspecialchars($search) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">Suivant</a>
-                            <a href="?page=<?= $totalPages ?>&search=<?= htmlspecialchars($search) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"><?= $totalPages ?></a>
+                            <a href="?page=<?= $currentPage + 1 ?>&search=<?= $search ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">Suivant</a>
+                            <a href="?page=<?= $totalPages ?>&search=<?= $search ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"><?= $totalPages ?></a>
                         <?php endif; ?>
                     </nav>
                 </div>
+
             </div>
         </main>
     </div>

@@ -31,7 +31,7 @@ class AuthController extends Controller
 
             if ($professeur && password_verify($password, $professeur['password'])) {
                 $_SESSION['professeur_id'] = $professeur['id'];
-                header('Location: /professeurs/cours');
+                header('Location: /professeurs/calendrier-hebdomadaire');
                 exit;
             }
 
@@ -41,7 +41,7 @@ class AuthController extends Controller
 
             if ($etudiant && password_verify($password, $etudiant['password'])) {
                 $_SESSION['etudiant_id'] = $etudiant['id'];
-                header('Location: /etudiants/cours');
+                header('Location: /etudiants/emploi_du_temps');
                 exit;
             }
 

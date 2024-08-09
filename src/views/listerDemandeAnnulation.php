@@ -54,7 +54,7 @@
                         </li>
                         <li>
                             <a href="/professeurs/cours/sessions" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
-                            <i class="fas fa-chalkboard-teacher mr-3"></i> Sessions
+                                <i class="fas fa-chalkboard-teacher mr-3"></i> Sessions
                             </a>
                         </li>
                         <li>
@@ -149,6 +149,10 @@
                 </div>
                 <!-- Pagination -->
                 <div class="py-6 flex justify-center bg-blue-50">
+                    <?php
+                    // Initialize $currentPage and other variables if not set
+                    $page  = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    ?>
                     <nav class="flex space-x-2">
                         <?php if ($page > 1) : ?>
                             <a href="?page=1&search=<?= htmlspecialchars($filter) ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all">1</a>
@@ -169,8 +173,6 @@
                 </div>
 
             </div>
-
-
     </div>
     </main>
     </div>

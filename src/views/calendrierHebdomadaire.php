@@ -174,97 +174,102 @@
         </aside>
 
         <main class="content py-12">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h1 class="text-5xl font-extrabold text-indigo-800 inline-block bg-white px-8 py-4 rounded-full shadow-xl transform -rotate-3">Emploi du Temps du Professeur</h1>
-                </div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-indigo-800 inline-block bg-white px-8 py-4 rounded-full shadow-xl transform -rotate-3">Emploi du Temps du Professeur</h1>
+        </div>
 
-                <div class="bg-white shadow-2xl rounded-3xl p-8 mb-8 transition-all duration-300 hover:shadow-3xl">
-                    <?php
-                    $currentWeek = date('W');
-                    $currentYear = date('Y');
-                    setlocale(LC_TIME, 'fr_FR.UTF-8');
+        <div class="bg-white shadow-2xl rounded-3xl p-8 mb-8 transition-all duration-300 hover:shadow-3xl">
+            <?php
+            $currentWeek = date('W');
+            $currentYear = date('Y');
+            setlocale(LC_TIME, 'fr_FR.UTF-8');
 
-                    $startDate = new DateTime();
-                    $startDate->setISODate($currentYear, $currentWeek);
-                    $daysOfWeek = [];
-                    for ($i = 0; $i < 7; $i++) {
-                        $daysOfWeek[] = [
-                            'date' => $startDate->format('Y-m-d'),
-                            'day' => $startDate->format('j'),
-                            'dayName' => ucfirst(strftime('%A', $startDate->getTimestamp())),
-                            'month' => ucfirst(strftime('%B', $startDate->getTimestamp()))
-                        ];
-                        $startDate->modify('+1 day');
-                    }
-                    ?>
-                    <div class="text-center mb-10">
-                        <h2 class="text-3xl font-bold text-indigo-700">Semaine <?= $currentWeek ?> : <span class="text-blue-600"><?= $daysOfWeek[0]['month'] ?> - <?= $daysOfWeek[6]['month'] ?> <?= $currentYear ?></span></h2>
-                    </div>
+            $startDate = new DateTime();
+            $startDate->setISODate($currentYear, $currentWeek);
+            $daysOfWeek = [];
+            for ($i = 0; $i < 7; $i++) {
+                $daysOfWeek[] = [
+                    'date' => $startDate->format('Y-m-d'),
+                    'day' => $startDate->format('j'),
+                    'dayName' => ucfirst(strftime('%A', $startDate->getTimestamp())),
+                    'month' => ucfirst(strftime('%B', $startDate->getTimestamp()))
+                ];
+                $startDate->modify('+1 day');
+            }
 
-                    <div class="grid grid-cols-8 gap-2">
-                        <div class="time-header text-center bg-gradient-to-b from-blue-200 to-blue-300 rounded-t-lg p-2">
-                            <span class="block text-2xl font-bold text-indigo-900">Horaire</span>
-                        </div>
-                        <?php foreach ($daysOfWeek as $day) : ?>
-                            <div class="day-header text-center bg-gradient-to-b from-blue-200 to-blue-300 rounded-t-lg p-2">
-                                <span class="block text-2xl font-bold text-indigo-900"><?= $day['dayName'] ?></span>
-                                <span class="block text-sm font-semibold text-indigo-700"><?= $day['day'] ?> <?= $day['month'] ?></span>
-                            </div>
-                        <?php endforeach; ?>
+            // Initialize $sessions as an empty array if not set
+            $sessions = isset($sessions) ? $sessions : [];
 
-                        <?php
-                        $sessionsByDay = array_fill(0, 7, []);
-                        foreach ($sessions as $session) {
-                            $dayIndex = (int)date('N', strtotime($session['date'])) - 1;
-                            $sessionsByDay[$dayIndex][] = $session;
-                        }
+            $sessionsByDay = array_fill(0, 7, []);
+            foreach ($sessions as $session) {
+                $dayIndex = (int)date('N', strtotime($session['date'])) - 1;
+                if (isset($sessionsByDay[$dayIndex])) {
+                    $sessionsByDay[$dayIndex][] = $session;
+                }
+            }
 
-                        $timeSlots = [
-                            ['start' => 8, 'end' => 10],
-                            ['start' => 10, 'end' => 12],
-                            ['start' => 12, 'end' => 14],
-                            ['start' => 14, 'end' => 16],
-                            ['start' => 16, 'end' => 18]
-                        ];
-                        ?>
+            $timeSlots = [
+                ['start' => 8, 'end' => 10],
+                ['start' => 10, 'end' => 12],
+                ['start' => 12, 'end' => 14],
+                ['start' => 14, 'end' => 16],
+                ['start' => 16, 'end' => 18]
+            ];
+            ?>
 
-                        <?php foreach ($timeSlots as $slot) : ?>
-                            <div class="time-block text-center bg-gray-50 p-2 rounded-b-lg shadow-inner">
-                                <span class="block text-lg font-bold text-indigo-900"><?= $slot['start'] ?>h-<?= $slot['end'] ?>h</span>
-                            </div>
-                            <?php for ($i = 0; $i < 7; $i++) : ?>
-                                <div class="calendar-day bg-gray-50 p-2 rounded-b-lg shadow-inner min-h-[80px] transition-all duration-300 hover:bg-gray-100">
-                                    <?php if (!empty($sessionsByDay[$i])) : ?>
-                                        <?php foreach ($sessionsByDay[$i] as $session) : ?>
-                                            <?php
-                                            $sessionStartHour = intval(substr($session['heure_debut'], 0, 2));
-                                            if ($sessionStartHour >= $slot['start'] && $sessionStartHour < $slot['end']) :
-                                            ?>
-                                                <div class="event mb-2 bg-white p-2 rounded-lg shadow hover:shadow-md transition-all duration-300 border-l-2 border-indigo-500">
-                                                    <p class="font-bold text-sm text-indigo-800"><?= htmlspecialchars($session['cours_libelle']) ?></p>
-                                                    <p class="text-sm text-gray-700 mt-1">
-                                                        <!-- <i class="far fa-clock mr-0 text-indigo-500"></i>
-                                                        <?= htmlspecialchars($session['heure_debut']) ?> - <?= htmlspecialchars($session['heure_fin']) ?> -->
-                                                    </p>
-                                                    <p class="font-bold text-sm text-gray-600 mt-1">Statut: <?= htmlspecialchars($session['statut']) ?></p>
-                                                </div>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    <?php else : ?>
-                                        <p class="text-center text-gray-500 mt-4 text-xs italic">Pas de cours</p>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endfor; ?>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <a href="/professeurs/cours" class="mt-12 inline-block text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out transform hover:translate-x-2 text-lg font-semibold">
-                        <i class="fas fa-arrow-left mr-2"></i> Retour à mes cours
-                    </a>
-                </div>
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-indigo-700">Semaine <?= $currentWeek ?> : <span class="text-blue-600"><?= $daysOfWeek[0]['month'] ?> - <?= $daysOfWeek[6]['month'] ?> <?= $currentYear ?></span></h2>
             </div>
-        </main>
+
+            <div class="grid grid-cols-8 gap-2">
+                <div class="time-header text-center bg-gradient-to-b from-blue-200 to-blue-300 rounded-t-lg p-2">
+                    <span class="block text-2xl font-bold text-indigo-900">Horaire</span>
+                </div>
+                <?php foreach ($daysOfWeek as $day) : ?>
+                    <div class="day-header text-center bg-gradient-to-b from-blue-200 to-blue-300 rounded-t-lg p-2">
+                        <span class="block text-2xl font-bold text-indigo-900"><?= htmlspecialchars($day['dayName']) ?></span>
+                        <span class="block text-sm font-semibold text-indigo-700"><?= htmlspecialchars($day['day']) ?> <?= htmlspecialchars($day['month']) ?></span>
+                    </div>
+                <?php endforeach; ?>
+
+                <?php foreach ($timeSlots as $slot) : ?>
+                    <div class="time-block text-center bg-gray-50 p-2 rounded-b-lg shadow-inner">
+                        <span class="block text-lg font-bold text-indigo-900"><?= $slot['start'] ?>h-<?= $slot['end'] ?>h</span>
+                    </div>
+                    <?php for ($i = 0; $i < 7; $i++) : ?>
+                        <div class="calendar-day bg-gray-50 p-2 rounded-b-lg shadow-inner min-h-[80px] transition-all duration-300 hover:bg-gray-100">
+                            <?php if (!empty($sessionsByDay[$i])) : ?>
+                                <?php foreach ($sessionsByDay[$i] as $session) : ?>
+                                    <?php
+                                    $sessionStartHour = intval(substr($session['heure_debut'], 0, 2));
+                                    if ($sessionStartHour >= $slot['start'] && $sessionStartHour < $slot['end']) :
+                                    ?>
+                                        <div class="event mb-2 bg-white p-2 rounded-lg shadow hover:shadow-md transition-all duration-300 border-l-2 border-indigo-500">
+                                            <p class="font-bold text-sm text-indigo-800"><?= htmlspecialchars($session['cours_libelle']) ?></p>
+                                            <p class="text-sm text-gray-700 mt-1">
+                                                <!-- <i class="far fa-clock mr-0 text-indigo-500"></i>
+                                                <?= htmlspecialchars($session['heure_debut']) ?> - <?= htmlspecialchars($session['heure_fin']) ?> -->
+                                            </p>
+                                            <p class="font-bold text-sm text-gray-600 mt-1">Statut: <?= htmlspecialchars($session['statut']) ?></p>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <p class="text-center text-gray-500 mt-4 text-xs italic">Pas de cours</p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endfor; ?>
+                <?php endforeach; ?>
+            </div>
+
+            <a href="/professeurs/cours" class="mt-12 inline-block text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out transform hover:translate-x-2 text-lg font-semibold">
+                <i class="fas fa-arrow-left mr-2"></i> Retour à mes cours
+            </a>
+        </div>
+    </div>
+</main>
+
     </div>
 </body>
 

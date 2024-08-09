@@ -130,11 +130,11 @@
                                 <i class="fas fa-calendar-times mr-3"></i> Liste des Absences
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="/etudiants/calendrier" class="sidebar-link flex items-center py-3 px-4 rounded-lg">
                                 <i class="fas fa-calendar-alt mr-3"></i> Calendrier des Sessions
                             </a>
-                        </li>
+                        </li> -->
                         <li>
                             <a href="/logout" class="sidebar-link flex items-center py-3 px-4 text-red-300 hover:bg-red-600 hover:text-white rounded-lg mt-8">
                                 <i class="fas fa-sign-out-alt mr-3"></i> Déconnexion
@@ -184,6 +184,8 @@
                         <?php endforeach; ?>
 
                         <?php
+                        // Initialize $sessions as an empty array if not set
+                        $emploiDuTemps = isset($emploiDuTemps) ? $emploiDuTemps : [];
                         $coursByDay = array_fill(0, 7, []);
                         foreach ($emploiDuTemps as $session) {
                             $dayIndex = (int)date('N', strtotime($session['date'])) - 1;
