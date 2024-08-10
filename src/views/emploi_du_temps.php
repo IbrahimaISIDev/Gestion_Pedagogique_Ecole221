@@ -170,16 +170,39 @@
                         ];
                         $startDate->modify('+1 day');
                     }
+
+                    // Initialize $sessions as an empty array if not set
+                    $sessions = isset($sessions) ? $sessions : [];
+
+                    $sessionsByDay = array_fill(0, 7, []);
+                    foreach ($sessions as $session) {
+                        $dayIndex = (int)date('N', strtotime($session['date'])) - 1;
+                        if (isset($sessionsByDay[$dayIndex])) {
+                            $sessionsByDay[$dayIndex][] = $session;
+                        }
+                    }
+
+                    $timeSlots = [
+                        ['start' => 8, 'end' => 10],
+                        ['start' => 10, 'end' => 12],
+                        ['start' => 12, 'end' => 14],
+                        ['start' => 14, 'end' => 16],
+                        ['start' => 16, 'end' => 18]
+                    ];
                     ?>
+
                     <div class="text-center mb-10">
                         <h2 class="text-3xl font-bold text-indigo-700">Semaine <?= $currentWeek ?> : <span class="text-blue-600"><?= $daysOfWeek[0]['month'] ?> - <?= $daysOfWeek[6]['month'] ?> <?= $currentYear ?></span></h2>
                     </div>
 
-                    <div class="grid grid-cols-7 gap-4">
+                    <div class="grid grid-cols-8 gap-2">
+                        <div class="time-header text-center bg-gradient-to-b from-blue-200 to-blue-300 rounded-t-lg p-2">
+                            <span class="block text-2xl font-bold text-indigo-900">Horaire</span>
+                        </div>
                         <?php foreach ($daysOfWeek as $day) : ?>
                             <div class="day-header text-center bg-gradient-to-b from-blue-200 to-blue-300 rounded-t-lg p-2">
-                                <span class="block text-2xl font-bold text-indigo-900"><?= $day['dayName'] ?></span>
-                                <span class="block text-sm font-semibold text-indigo-700"><?= $day['day'] ?> <?= $day['month'] ?></span>
+                                <span class="block text-2xl font-bold text-indigo-900"><?= htmlspecialchars($day['dayName']) ?></span>
+                                <span class="block text-sm font-semibold text-indigo-700"><?= htmlspecialchars($day['day']) ?> <?= htmlspecialchars($day['month']) ?></span>
                             </div>
                         <?php endforeach; ?>
 
@@ -192,29 +215,33 @@
                             $coursByDay[$dayIndex][] = $session;
                         }
                         ?>
-
-                        <?php for ($i = 0; $i < 7; $i++) : ?>
-                            <div class="calendar-day bg-gray-50 p-2 rounded-b-lg shadow-inner min-h-[150px] transition-all duration-300 hover:bg-gray-100">
+                        <?php foreach ($timeSlots as $slot) : ?>
+                            <div class="time-block text-center bg-gray-50 p-2 rounded-b-lg shadow-inner">
+                                <span class="block text-lg font-bold text-indigo-900"><?= $slot['start'] ?>h-<?= $slot['end'] ?>h</span>
+                            </div>
+                            <?php for ($i = 0; $i < 7; $i++) : ?>
+                                <div class="calendar-day bg-gray-50 p-2 rounded-b-lg shadow-inner min-h-[80px] transition-all duration-300 hover:bg-gray-100">
                                 <?php if (!empty($coursByDay[$i])) : ?>
                                     <?php foreach ($coursByDay[$i] as $session) : ?>
-                                        <div class="event mb-2 bg-white p-2 rounded-lg shadow hover:shadow-md transition-all duration-300 border-l-2 border-indigo-500">
-                                            <p class="font-bold text-sm text-indigo-800"><?= htmlspecialchars($session['libelle']) ?></p>
-                                            <p class="text-sm text-gray-700 mt-1">
-                                                <i class="far fa-clock mr-0 text-indigo-500"></i>
-                                                <?= htmlspecialchars($session['heure_debut']) ?> - <?= htmlspecialchars($session['heure_fin']) ?>
-                                            </p>
-                                            <button type="button" class="mt-1 bg-indigo-600 text-white px-2 py-2 rounded-full text-xs font-semibold hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50" onclick='openModal(<?= json_encode($session) ?>)'>
+                                            <?php
+                                            $sessionStartHour = intval(substr($session['heure_debut'], 0, 2));
+                                            if ($sessionStartHour >= $slot['start'] && $sessionStartHour < $slot['end']) :
+                                            ?>
+                                                <div class="event mb-2 bg-white p-2 rounded-lg shadow hover:shadow-md transition-all duration-300 border-l-2 border-indigo-500">
+                                                    <p class="font-bold text-sm text-indigo-800"><?= htmlspecialchars($session['libelle']) ?></p>
+                                                    <button type="button" class="mt-1 bg-indigo-600 text-white px-2 py-2 rounded-full text-xs font-semibold hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50" onclick='openModal(<?= json_encode($session) ?>)'>
                                                 <i class="fas fa-check-circle mr-1"></i>Présence
                                             </button>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else : ?>
-                                    <p class="text-center text-gray-500 mt-4 text-xs italic">Pas de cours</p>
-                                <?php endif; ?>
-                            </div>
-                        <?php endfor; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <p class="text-center text-gray-500 mt-4 text-xs italic">Pas de cours</p>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endfor; ?>
+                        <?php endforeach; ?>
                     </div>
-
                     <a href="/etudiants/cours" class="mt-12 inline-block text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out transform hover:translate-x-2 text-lg font-semibold">
                         <i class="fas fa-arrow-left mr-2"></i> Retour à la liste des cours
                     </a>
@@ -222,101 +249,105 @@
             </div>
         </main>
 
-        <!-- Modal -->
-        <div id="presenceModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
-            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    </div>
+    </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="presenceModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4">
+                    <h3 class="text-lg leading-6 font-medium text-white" id="modal-title">Marquer Présence</h3>
                 </div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4">
-                        <h3 class="text-lg leading-6 font-medium text-white" id="modal-title">Marquer Présence</h3>
+                <div class="px-6 py-4">
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-600" id="modal-content">
+                            <!-- Contenu dynamique -->
+                        </p>
+                        <!-- Hidden input to store session ID -->
+                        <input type="hidden" id="modal-session-id">
                     </div>
-                    <div class="px-6 py-4">
-                        <div class="mt-2">
-                            <p class="text-sm text-gray-600" id="modal-content">
-                                <!-- Contenu dynamique -->
-                            </p>
-                            <!-- Hidden input to store session ID -->
-                            <input type="hidden" id="modal-session-id">
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-4">
-                        <button type="button" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm transition ease-in-out duration-150" onclick="submitPresence()">Marquer</button>
-                        <button type="button" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-200 text-base font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:text-sm transition ease-in-out duration-150" onclick="closeModal()">Annuler</button>
-                    </div>
+                </div>
+                <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-4">
+                    <button type="button" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm transition ease-in-out duration-150" onclick="submitPresence()">Marquer</button>
+                    <button type="button" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-200 text-base font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:text-sm transition ease-in-out duration-150" onclick="closeModal()">Annuler</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
 
-        <!-- Notification -->
-        <div id="confirmationNotification" class="fixed bottom-16 right-4 mb-4 mr-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg transform scale-95 opacity-0 transition-all duration-300">
-            <p id="notificationMessage" class="text-sm font-medium">Présence marquée avec succès !</p>
-        </div>
+    <!-- Notification -->
+    <div id="confirmationNotification" class="fixed bottom-16 right-4 mb-4 mr-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg transform scale-95 opacity-0 transition-all duration-300">
+        <p id="notificationMessage" class="text-sm font-medium">Présence marquée avec succès !</p>
+    </div>
 
-        <script>
-            function openModal(session) {
-                const modal = document.getElementById('presenceModal');
-                const content = document.getElementById('modal-content');
-                const sessionIdInput = document.getElementById('modal-session-id');
+    <script>
+        function openModal(session) {
+            const modal = document.getElementById('presenceModal');
+            const content = document.getElementById('modal-content');
+            const sessionIdInput = document.getElementById('modal-session-id');
 
-                content.textContent = `Vous êtes sur le point de marquer votre présence pour le cours : ${session.libelle} le ${session.date}.`;
-                sessionIdInput.value = session.id; // Store session ID in the hidden input
+            content.textContent = `Vous êtes sur le point de marquer votre présence pour le cours : ${session.libelle} le ${session.date}.`;
+            sessionIdInput.value = session.id; // Store session ID in the hidden input
 
-                modal.classList.remove('hidden');
-            }
+            modal.classList.remove('hidden');
+        }
 
-            function closeModal() {
-                const modal = document.getElementById('presenceModal');
-                modal.classList.add('hidden');
-            }
+        function closeModal() {
+            const modal = document.getElementById('presenceModal');
+            modal.classList.add('hidden');
+        }
 
-            function submitPresence() {
-                const sessionId = document.getElementById('modal-session-id').value;
+        function submitPresence() {
+            const sessionId = document.getElementById('modal-session-id').value;
 
-                fetch(`/etudiants/marquer_presence/${sessionId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({
-                            coursId: sessionId
-                        })
+            fetch(`/etudiants/marquer_presence/${sessionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        coursId: sessionId
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erreur réseau ou serveur');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        showNotification(data.message || 'Présence marquée avec succès !');
-                        closeModal();
-                    })
-                    .catch(error => {
-                        console.error('Error marking presence:', error);
-                        showNotification('Erreur lors du marquage de la présence. Veuillez réessayer.', true);
-                    });
-            }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau ou serveur');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showNotification(data.message || 'Présence marquée avec succès !');
+                    closeModal();
+                })
+                .catch(error => {
+                    console.error('Error marking presence:', error);
+                    showNotification('Erreur lors du marquage de la présence. Veuillez réessayer.', true);
+                });
+        }
 
-            function showNotification(message, isError = false) {
-                const notification = document.getElementById('confirmationNotification');
-                const notificationMessage = document.getElementById('notificationMessage');
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('confirmationNotification');
+            const notificationMessage = document.getElementById('notificationMessage');
 
-                notificationMessage.textContent = message;
-                notification.classList.remove('opacity-0', 'scale-95', 'bg-blue-600', 'bg-red-600');
-                notification.classList.add('opacity-100', 'scale-100', isError ? 'bg-red-600' : 'bg-blue-600');
+            notificationMessage.textContent = message;
+            notification.classList.remove('opacity-0', 'scale-95', 'bg-blue-600', 'bg-red-600');
+            notification.classList.add('opacity-100', 'scale-100', isError ? 'bg-red-600' : 'bg-blue-600');
 
-                setTimeout(() => {
-                    notification.classList.add('opacity-0', 'scale-95');
-                    notification.classList.remove('opacity-100', 'scale-100');
-                }, 4000);
-            }
-        </script>
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'scale-95');
+                notification.classList.remove('opacity-100', 'scale-100');
+            }, 4000);
+        }
+    </script>
 </body>
 
 </html>

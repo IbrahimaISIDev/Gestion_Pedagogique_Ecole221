@@ -126,55 +126,53 @@
 
             <h1 class="text-4xl font-extrabold mb-8 text-center text-blue-600">Absences</h1>
 
-            <div class="bg-white custom-shadow rounded-3xl overflow-hidden hover-scale transition-all">
-                <!-- Liste des absences -->
+            <div class="bg-white shadow-xl rounded-3xl overflow-hidden hover:shadow-2xl hover-scale     transition-all duration-300 mb-8">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-blue-200">
-                        <thead class="bg-blue-50">
+                    <table class="w-full">
+                        <thead class="bg-gradient-to-r from-blue-600 to-indigo-600">
                             <tr>
-                                <th class="py-4 px-6 text-left text-sm font-medium text-blue-600 uppercase tracking-wider">Date</th>
-                                <th class="py-4 px-6 text-left text-sm font-medium text-blue-600 uppercase tracking-wider">Cours</th>
-                                <th class="py-4 px-6 text-left text-sm font-medium text-blue-600 uppercase tracking-wider">Statut</th>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                <th class="py-4 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Etat</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold text-white uppercase tracking-wider">Date</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold text-white uppercase tracking-wider">Cours</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold text-white uppercase tracking-wider">Statut</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold text-white uppercase tracking-wider">Actions</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold text-white uppercase tracking-wider">Etat</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-blue-100">
+                        <tbody class="divide-y divide-gray-200">
                             <?php if (!empty($absences)) : ?>
                                 <?php foreach ($absences as $absence) : ?>
-                                    <tr>
+                                    <tr class="hover:bg-gray-50 transition-colors duration-200">
                                         <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($absence['date_absence']) ?></td>
-                                        <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($absence['cours_libelle']) ?></td>
+                                        <td class="py-4 px-6 text-sm text-gray-700 font-medium"><?= htmlspecialchars($absence['cours_libelle']) ?></td>
                                         <td class="py-4 px-6 text-sm">
                                             <form action="/etudiants/absences" method="post" class="inline">
                                                 <input type="hidden" name="absence_id" value="<?= $absence['id'] ?>">
                                                 <?php if (!isset($absence['justification_id'])) : ?>
-                                                    <button type="submit" name="statut" value="justifie" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all">Non Justifié</button>
+                                                    <button type="submit" name="statut" value="justifie" class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 text-xs font-semibold">Non Justifié</button>
                                                 <?php else : ?>
-                                                    <span class="text-green-600">Justifié</span>
+                                                    <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Justifié</span>
                                                 <?php endif; ?>
                                             </form>
                                         </td>
                                         <td class="py-4 px-6 text-sm">
                                             <?php if (isset($absence['justification_id'])) : ?>
-                                                <span class="text-green-600">Justifié</span>
+                                                <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Justifié</span>
                                             <?php else : ?>
-                                                <button onclick="openModal(<?= $absence['id'] ?>)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">Justifier</button>
+                                                <button onclick="openModal(<?= $absence['id'] ?>)" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-300 text-xs font-semibold">Justifier</button>
                                             <?php endif; ?>
                                         </td>
                                         <td class="py-4 px-6 text-sm">
                                             <?php if (isset($absence['justification_id'])) : ?>
-                                                <span class="text-green-600">En Cours de Validation</span>
+                                                <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">En Cours de Validation</span>
                                             <?php else : ?>
-                                                <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all">En Attente</button>
+                                                <span class="px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold">En Attente</span>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
-
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="5" class="py-4 px-6 text-sm text-gray-500 text-center">Aucune absence trouvée</td>
+                                    <td colspan="5" class="py-8 px-6 text-sm text-gray-500 text-center italic">Aucune absence trouvée</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

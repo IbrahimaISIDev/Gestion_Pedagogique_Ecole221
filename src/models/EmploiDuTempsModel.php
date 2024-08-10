@@ -24,12 +24,13 @@ class EmploiDuTempsModel
     {
         try {
             $stmt = $this->pdo->prepare("
-                SELECT s.date, c.libelle AS cours_libelle, s.heure_debut, s.heure_fin
+                SELECT DISTINCT s.date, c.libelle AS cours_libelle, s.heure_debut, s.heure_fin
                 FROM Sessions s
                 JOIN Cours c ON s.cours_id = c.id
                 JOIN Etudiants_Cours ec ON c.id = ec.cours_id
                 JOIN Etudiants e ON ec.etudiant_id = e.id
                 WHERE e.id = :etudiant_id AND WEEK(s.date) = WEEK(CURDATE()) AND YEAR(s.date) = YEAR(CURDATE())
+                ORDER BY s.date, s.heure_debut;
             ");
 
             $stmt->execute([':etudiant_id' => $etudiantId]);
