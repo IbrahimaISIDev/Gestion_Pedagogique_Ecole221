@@ -124,7 +124,7 @@
                                 <!-- <th class="py-4 px-6 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">ID</th> -->
                                 <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Libellé du Cours</th>
                                 <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Date</th>
-                                <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Motif</th>
+                                <!-- <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Motif</th> -->
                                 <th class="py-4 px-6 text-left text-lg font-medium text-blue-500 uppercase tracking-wider">Statut</th>
                             </tr>
                         </thead>
@@ -135,7 +135,7 @@
                                         <!-- <td class="py-4 px-6 text-sm text-gray-700"><?= htmlspecialchars($annulation['id']) ?></td> -->
                                         <td class="py-4 px-6 text-lg font-medium text-gray-700"><i class="fas fa-book mr-2"></i><?= htmlspecialchars($annulation['libelle_cours']) ?></td>
                                         <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['date_demande']) ?></td>
-                                        <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['motif']) ?></td>
+                                        <!-- <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['motif']) ?></td> -->
                                         <td class="py-4 px-6 text-lg font-medium text-gray-700"><?= htmlspecialchars($annulation['statut']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
